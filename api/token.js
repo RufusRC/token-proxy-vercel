@@ -1,11 +1,16 @@
 export default async function handler(req, res) {
-  // ✅ Habilita CORS
+  // Corrige CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
+  // Trata requisições OPTIONS (pré-flight)
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
   try {
-    const r = await fetch("http://10.154.77.186:8085/wsToken.asmx/GetToken?user=Usuar&password=1234");
+    const r = await fetch("http://10.154.77.186:8085/wsToken.asmx/GetToken?user=usuar&password=1234");
     const xml = await r.text();
     const token = xml.match(/<string[^>]*>(.*?)<\/string>/)?.[1];
 
